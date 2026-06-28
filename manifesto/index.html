@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The CI/CD for Life Manifesto</title>
+<link rel="icon" href="../brand/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14161B;
+    --surface:#1B1E25;
+    --surface-2:#222632;
+    --rim:#2E3340;
+    --rim-bright:#3C4252;
+    --hi:#EDEFF2;
+    --mid:#C2C8D2;
+    --lo:#8A93A2;
+    --green:#23A865;
+    --green-soft:#4fc98c;
+    --red:#D7282F;
+    --yellow:#F2C200;
+    --ink:#0E0F12;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:radial-gradient(1200px 700px at 50% -15%, #1B2029 0%, var(--bg) 55%);
+    color:var(--hi);
+    font-family:"Hanken Grotesk",system-ui,sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    padding:clamp(22px,4vw,60px) clamp(18px,5vw,40px) 80px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+
+  /* wordmark */
+  .cfl-brand{display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:40px;}
+  .cfl-mark{display:inline-flex;align-items:baseline;gap:9px;}
+  .cfl-ci{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:18px;letter-spacing:.02em;
+    color:var(--ink);background:var(--green);padding:3px 9px;border-radius:6px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.4);}
+  .cfl-life{font-family:"Archivo",sans-serif;font-weight:900;font-size:20px;letter-spacing:-.01em;color:var(--hi);}
+  .cfl-badge{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--green);
+    display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;
+    border:1px solid rgba(35,168,101,.4);background:rgba(35,168,101,.06);}
+  .cfl-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2.4s ease-out infinite;}
+
+  /* hero */
+  .kicker{font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--lo);margin-bottom:16px;}
+  h1{font-family:"Archivo",sans-serif;font-weight:900;text-transform:uppercase;
+    font-size:clamp(36px,7vw,64px);line-height:.96;letter-spacing:-.02em;margin:0 0 20px;}
+  .thesis{font-size:clamp(18px,2.4vw,21px);color:var(--mid);margin:0 0 8px;max-width:60ch;}
+  .thesis b{color:var(--hi);font-weight:600;}
+
+  /* stat trio */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:40px 0 8px;}
+  .stat{background:linear-gradient(180deg,var(--surface-2),var(--surface));
+    border:1px solid var(--rim);border-radius:12px;padding:16px 16px 14px;}
+  .stat .n{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(22px,4vw,30px);
+    line-height:1;color:var(--green-soft);letter-spacing:-.01em;}
+  .stat .l{font-size:12.5px;color:var(--lo);margin-top:8px;line-height:1.35;}
+
+  /* section markers */
+  .stage{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--green);
+    margin:48px 0 14px;display:flex;align-items:center;gap:12px;}
+  .stage::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--green);flex:0 0 auto;}
+  .stage.red{color:var(--red);} .stage.red::before{background:var(--red);}
+  .stage.yellow{color:var(--yellow);} .stage.yellow::before{background:var(--yellow);}
+  .stage .mono{color:var(--lo);}
+
+  h2{font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(23px,3.4vw,30px);
+    line-height:1.1;letter-spacing:-.01em;margin:0 0 16px;}
+  p{margin:0 0 18px;}
+  p .em{color:var(--hi);font-weight:600;}
+  a{color:var(--green-soft);text-decoration:none;border-bottom:1px solid rgba(79,201,140,.35);}
+  a:hover{border-bottom-color:var(--green-soft);}
+  code{font-family:"IBM Plex Mono",monospace;font-size:.88em;background:rgba(255,255,255,.05);
+    border:1px solid var(--rim);padding:1px 6px;border-radius:5px;color:var(--mid);}
+
+  /* pull quote */
+  .pull{font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(20px,3vw,26px);
+    line-height:1.2;letter-spacing:-.01em;color:var(--hi);
+    border-left:3px solid var(--green);padding:6px 0 6px 22px;margin:30px 0;}
+
+  /* callout (women / bone) */
+  .callout{background:linear-gradient(180deg,var(--surface-2),var(--surface));
+    border:1px solid var(--rim);border-left:3px solid var(--yellow);border-radius:14px;
+    padding:24px clamp(20px,3vw,28px);margin:32px 0;}
+  .callout .tag{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.06em;
+    color:var(--yellow);margin-bottom:12px;}
+  .callout h3{font-family:"Archivo",sans-serif;font-weight:800;font-size:21px;margin:0 0 12px;letter-spacing:-.01em;}
+  .callout p:last-child{margin-bottom:0;}
+
+  /* tenets */
+  .tenets{list-style:none;counter-reset:t;padding:0;margin:24px 0 0;}
+  .tenets li{counter-increment:t;position:relative;padding:18px 0 18px 56px;border-top:1px solid var(--rim);}
+  .tenets li:last-child{border-bottom:1px solid var(--rim);}
+  .tenets li::before{content:counter(t,decimal-leading-zero);position:absolute;left:0;top:18px;
+    font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:600;color:var(--green);}
+  .tenets b{font-family:"Archivo",sans-serif;font-weight:800;color:var(--hi);}
+
+  /* CTA */
+  .cta{margin:48px 0 0;padding:30px clamp(22px,3vw,34px);border-radius:16px;
+    background:linear-gradient(180deg,#1d2733,#171a21);border:1px solid var(--rim-bright);}
+  .cta h2{margin-bottom:10px;}
+  .cta p{color:var(--mid);margin-bottom:0;}
+  .deploy{display:inline-flex;align-items:center;gap:9px;margin-top:22px;
+    font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--ink);
+    background:var(--green);padding:11px 18px;border-radius:9px;font-weight:600;}
+
+  /* references */
+  .refs{margin-top:56px;padding-top:24px;border-top:1px solid var(--rim);}
+  .refs h4{font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--lo);margin:0 0 16px;}
+  .refs ol{margin:0;padding-left:22px;color:var(--lo);font-size:13.5px;line-height:1.55;}
+  .refs li{margin-bottom:10px;}
+  .refs a{color:var(--mid);border-bottom-color:var(--rim-bright);}
+  .disc{margin-top:22px;font-size:12.5px;color:var(--lo);font-style:italic;}
+
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(35,168,101,.55);}70%{box-shadow:0 0 0 7px rgba(35,168,101,0);}100%{box-shadow:0 0 0 0 rgba(35,168,101,0);}}
+  @media (max-width:560px){ .stats{grid-template-columns:1fr;} }
+  @media (prefers-reduced-motion:reduce){ .cfl-dot{animation:none;} }
+</style>
+</head>
+<body>
+<a href="../" style="position:fixed;top:14px;right:16px;z-index:99;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#23A865;text-decoration:none;border:1px solid rgba(35,168,101,.4);background:rgba(20,22,27,.72);padding:6px 11px;border-radius:999px;backdrop-filter:blur(6px)">cicd/for/life ↩</a>
+<div class="wrap">
+
+  <span class="cfl-brand">
+    <span class="cfl-mark"><span class="cfl-ci">CI/CD</span><span class="cfl-life">for Life</span></span>
+    <span class="cfl-badge"><span class="cfl-dot"></span>v1.0 · manifesto</span>
+  </span>
+
+  <div class="kicker">A manifesto for people who ship</div>
+  <h1>You automated everything<br>except yourself.</h1>
+  <p class="thesis">You built pipelines so a thousand small, tested changes reach production safely. Then you went home and ran your own body on <b>no pipeline at all</b> — no commits, no tests, no observability, no rollback. This is an appeal to deploy the discipline you already trust to the one system you can never re-provision.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="n">10–17%</div><div class="l">lower risk of death, heart disease, cancer &amp; diabetes in people who strength-train<sup>1</sup></div></div>
+    <div class="stat"><div class="n">30–60<span style="font-size:.6em"> min/wk</span></div><div class="l">where the benefit curve bends — the highest-ROI hour you'll spend<sup>1</sup></div></div>
+    <div class="stat"><div class="n">2×<span style="font-size:.6em"> /week</span></div><div class="l">the global medical standard, a strong WHO recommendation<sup>2</sup></div></div>
+  </div>
+
+  <div class="stage"><span class="mono">commit 00 —</span> the premise</div>
+  <h2>Your body is production. There is no staging copy.</h2>
+  <p>Every other system you own is replaceable. Servers get re-provisioned, laptops get wiped and re-imaged, codebases get rewritten. Your skeleton and your muscle mass are the one deployment with <span class="em">no rollback and no spare hardware.</span> And like any production system left unmonitored, it degrades silently. After 40, you lose bone at roughly <span class="em">1% per year</span><sup>3</sup> and muscle steadily alongside it — accruing, invisibly, exactly like the technical debt you keep promising to pay down. Nobody gets paged. The incident only fires years later, as a fall, a fracture, a frailty you can't refactor your way out of.</p>
+
+  <div class="stage red"><span class="mono">build —</span> stop importing hype</div>
+  <h2>Longevity fads are unaudited dependencies.</h2>
+  <p>The wellness-industrial complex is selling you packages with impressive READMEs and no test coverage. NMN, resveratrol, metformin-for-the-healthy, exotic peptides, the $40 mushroom coffee — the marketing implies production-grade, but pull up the actual evidence and you find <span class="em">no supplement has been shown to extend human lifespan in a controlled trial.</span><sup>4</sup> Most of the splashy results are in yeast, worms, and mice; the human data is mixed, short, and underpowered. Reviewers keep landing on the same conclusion — <span class="em">current human evidence doesn't support these compounds slowing aging</span>, and ordinary lifestyle measures have far stronger support.<sup>5</sup></p>
+  <p>You would never <code>npm install</code> an unmaintained package from an anonymous author, skip the tests, and push it straight to prod. That is precisely the risk profile of a longevity stack: speculative, unregulated, and adopted on vibes. It's hype-driven development for your body.</p>
+
+  <div class="pull">Go where the evidence already shipped. Not where it might, someday, in a mouse.</div>
+
+  <div class="stage"><span class="mono">deploy —</span> where the ROI actually is</div>
+  <h2>Strength training is the standard library.</h2>
+  <p>While the supplements are still in preclinical, resistance training has decades of production use and the test coverage to match. A 2022 meta-analysis pooling sixteen cohort studies found that people who do muscle-strengthening activity carry a <span class="em">10–17% lower risk of all-cause mortality, cardiovascular disease, total cancer, type 2 diabetes, and lung cancer.</span><sup>1</sup> Not a surrogate marker in a petri dish — death, the actual endpoint, in humans.</p>
+  <p>And the dose is almost insultingly small. The same data shows the benefit curve bending hard at just <span class="em">30 to 60 minutes a week.</span><sup>1</sup> That's the ROI pitch in one line: roughly one Pomodoro, twice a week, against the leading causes of death. No engineer who optimizes for leverage should be able to walk past a return like that. It's why the World Health Organization, the American Heart Association, Mayo Clinic, and Harvard all converge on the same recommendation — train every major muscle group <span class="em">at least twice a week.</span><sup>2,6,7,8</sup> This isn't a biohacker's hot take. It is the settled, global, boring consensus of the medical establishment. The best dependencies usually are boring.</p>
+
+  <div class="callout">
+    <div class="tag">// hotfix — a critical patch for women</div>
+    <h3>Bone density is a silent failure. Lifting is the fix.</h3>
+    <p>This one deserves its own callout, because the people it helps most are the people most often told to stay light. Osteoporosis affects an estimated <span class="em">eight million women in the US</span> — four times the number of men<sup>3</sup> — and bone loss accelerates sharply at menopause. The stakes are not cosmetic: <span class="em">six of ten people who break a hip never fully regain their independence.</span><sup>3</sup></p>
+    <p>For years the advice was to treat fragile bones gently. The <span class="em">LIFTMOR trial</span> dismantled that. Postmenopausal women with low bone mass did twice-weekly, 30-minute sessions of genuinely <span class="em">heavy</span> lifting — five sets of five at over 85% of their one-rep max — and over eight months <span class="em">improved bone density in their spine and hips, improved function, and did it safely.</span><sup>9</sup> Bone, like any well-instrumented system, responds to load. Lift heavy, on purpose, and you write density back into the very places most likely to fracture: hip, spine, wrist.<sup>6</sup></p>
+  </div>
+
+  <div class="stage yellow"><span class="mono">main —</span> the pipeline, applied to you</div>
+  <h2>You already know how to do this.</h2>
+  <p>The whole reason this maps so cleanly is that strength is a CI/CD problem in disguise. <span class="em">Small, frequent commits</span> beat one heroic effort — consistency over intensity. <span class="em">Observability</span> means you log the sets and watch the trend, because what gets measured gets shipped. <span class="em">Progressive overload</span> is just incrementing the version: a little more load, validated, every cycle. <span class="em">Deloads are scheduled rollbacks.</span> And the meet, or simply the strong decades you get to keep, is the release. You don't need motivation. You need a pipeline — and building pipelines is the thing you're already good at.</p>
+
+  <ol class="tenets">
+    <li><b>Production over speculation.</b> We invest where human outcomes are proven, not where mouse data is promising.</li>
+    <li><b>Ship small, ship often.</b> Two sessions a week, kept for years, beats a perfect program abandoned in a month.</li>
+    <li><b>Measure, don't guess.</b> Your body emits telemetry — load, reps, sleep, recovery. Read the dashboard.</li>
+    <li><b>Load is the feature, not the bug.</b> Bone and muscle adapt to stress. Heavy, progressive, well-coached load is the stimulus.</li>
+    <li><b>No rollback on a fracture.</b> We pay down physical debt now, while the patch is cheap.</li>
+    <li><b>Boring consensus beats shiny hype.</b> We trust the global medical standard over the supplement aisle.</li>
+  </ol>
+
+  <div class="cta">
+    <h2>Deploy to yourself.</h2>
+    <p>Past the longevity fads and the optimization theater, the highest-leverage health investment available to you is also the one with the deepest evidence base and the smallest time cost. Pick up something heavy, twice a week, for the rest of your life. Run the loop. Keep shipping.</p>
+    <span class="deploy">$ cicd --deploy self --strength --twice-weekly</span>
+  </div>
+
+  <div class="refs">
+    <h4>References</h4>
+    <ol>
+      <li>Momma H, et al. <em>Muscle-strengthening activities are associated with lower risk and mortality in major non-communicable diseases.</em> Br J Sports Med, 2022. <a href="https://pubmed.ncbi.nlm.nih.gov/35228201/">pubmed.ncbi.nlm.nih.gov/35228201</a></li>
+      <li>WHO Guidelines on Physical Activity and Sedentary Behaviour, 2020 (strong recommendation: muscle-strengthening, all major muscle groups, 2+ days/week). <a href="https://www.ncbi.nlm.nih.gov/books/NBK566046/">ncbi.nlm.nih.gov/books/NBK566046</a></li>
+      <li>Harvard Health Publishing. <em>Strength training builds more than muscles.</em> <a href="https://www.health.harvard.edu/staying-healthy/strength-training-builds-more-than-muscles">health.harvard.edu</a></li>
+      <li>Longevity Supplements: What Research Supports (review of NMN/resveratrol/rapamycin trial evidence). <a href="https://yourhealthier.com/blogs/blog/longevity-supplements">summary of trial evidence</a></li>
+      <li>The Conversation / Medical Xpress. <em>Can NMN, NAD+ and resveratrol really slow aging? What the evidence says.</em> <a href="https://theconversation.com/can-supplements-containing-nmn-nad-and-resveratrol-really-slow-ageing-heres-what-the-evidence-says-282524">theconversation.com</a></li>
+      <li>American Heart Association. <em>Strength and Resistance Training Exercise.</em> <a href="https://www.heart.org/en/healthy-living/exercise-and-physical-activity/fitness-basics/strength-and-resistance-training-exercise">heart.org</a></li>
+      <li>Mayo Clinic. <em>Strength training: Get stronger, leaner, healthier.</em> <a href="https://www.mayoclinic.org/healthy-lifestyle/fitness/in-depth/strength-training/art-20046670">mayoclinic.org</a></li>
+      <li>WHO 2020 guidelines, as above — global medical convergence on 2×/week.</li>
+      <li>Watson SL, et al. <em>High-Intensity Resistance and Impact Training (LIFTMOR RCT).</em> J Bone Miner Res, 2018;33(2):211–220. <a href="https://pubmed.ncbi.nlm.nih.gov/28975661/">pubmed.ncbi.nlm.nih.gov/28975661</a></li>
+    </ol>
+    <p class="disc">This manifesto is an evidence-informed argument, not medical advice. The mortality and disease figures come from observational cohort data (associations, not proof of causation); the bone-density findings are from a randomized trial. Before starting heavy training — especially with existing bone, joint, or cardiac conditions — talk to a clinician and, ideally, get coached on technique. Load is the medicine; dosed badly, it's also the injury.</p>
+    <p class="disc">© 2026 CI/CD for Life. Manifesto text licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>. The “CI/CD for Life” name and wordmark are reserved.</p>
+  </div>
+
+</div>
+</body>
+</html>

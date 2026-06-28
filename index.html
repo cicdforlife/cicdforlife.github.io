@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CI/CD for Life</title>
+<meta name="description" content="Continuous Improvement / Continuous Deployment — applying the pipeline you already trust to the one system you can never re-provision: your body.">
+<link rel="icon" href="./brand/favicon-32.png">
+<link rel="apple-touch-icon" href="./brand/favicon-180.png">
+<meta property="og:title" content="CI/CD for Life">
+<meta property="og:description" content="Ship strength to the one system you can't redeploy.">
+<meta property="og:image" content="./brand/cicd-for-life-sticker-dark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14161B;--surface:#1B1E25;--surface-2:#222632;--rim:#2E3340;--rim-bright:#3C4252;
+    --hi:#EDEFF2;--mid:#C2C8D2;--lo:#8A93A2;--green:#23A865;--green-soft:#4fc98c;--ink:#0E0F12;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:radial-gradient(1200px 700px at 50% -15%, #1B2029 0%, var(--bg) 55%);
+    color:var(--hi);font-family:"Hanken Grotesk",system-ui,sans-serif;line-height:1.6;
+    -webkit-font-smoothing:antialiased;padding:clamp(24px,5vw,64px) clamp(18px,5vw,40px) 72px;}
+  .wrap{max-width:760px;margin:0 auto;}
+
+  .cfl-brand{display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:44px;}
+  .cfl-mark{display:inline-flex;align-items:baseline;gap:9px;}
+  .cfl-ci{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:19px;letter-spacing:.02em;
+    color:var(--ink);background:var(--green);padding:3px 9px;border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.4);}
+  .cfl-life{font-family:"Archivo",sans-serif;font-weight:900;font-size:21px;letter-spacing:-.01em;color:var(--hi);white-space:nowrap;}
+  .cfl-badge{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--green);display:inline-flex;
+    align-items:center;gap:7px;padding:4px 10px;border-radius:999px;border:1px solid rgba(35,168,101,.4);background:rgba(35,168,101,.06);}
+  .cfl-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2.4s ease-out infinite;}
+
+  .kicker{font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--lo);margin-bottom:16px;}
+  h1{font-family:"Archivo",sans-serif;font-weight:900;text-transform:uppercase;font-size:clamp(38px,7.5vw,68px);
+    line-height:.95;letter-spacing:-.02em;margin:0 0 22px;}
+  .lede{font-size:clamp(17px,2.3vw,20px);color:var(--mid);max-width:60ch;margin:0 0 14px;}
+  .lede b{color:var(--hi);font-weight:600;}
+
+  .cards{margin:44px 0 0;}
+  .card{display:block;text-decoration:none;color:inherit;margin-bottom:14px;
+    background:linear-gradient(180deg,var(--surface-2),var(--surface));
+    border:1px solid var(--rim);border-radius:14px;padding:22px 24px 20px;transition:transform .16s ease,border-color .16s ease;}
+  .card:last-child{margin-bottom:0;}
+  .card:hover{transform:translateY(-3px);border-color:var(--rim-bright);}
+  .card .tag{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.05em;color:var(--green);margin-bottom:10px;}
+  .card h2{font-family:"Archivo",sans-serif;font-weight:800;font-size:22px;letter-spacing:-.01em;margin:0 0 8px;}
+  .card p{font-size:14.5px;color:var(--lo);margin:0;max-width:60ch;}
+  .card .go{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--green-soft);margin-top:14px;display:inline-block;}
+
+  .feedback{margin-top:44px;padding:24px clamp(20px,3vw,28px);border-radius:14px;
+    background:linear-gradient(180deg,#1d2733,#171a21);border:1px solid var(--rim-bright);}
+  .feedback h3{font-family:"Archivo",sans-serif;font-weight:800;font-size:19px;margin:0 0 8px;}
+  .feedback p{margin:0;color:var(--mid);font-size:15px;}
+  .feedback a{color:var(--green-soft);}
+
+  footer{margin-top:48px;padding-top:22px;border-top:1px solid var(--rim);font-size:13px;color:var(--lo);
+    display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;}
+  footer a{color:var(--lo);}
+
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(35,168,101,.55);}70%{box-shadow:0 0 0 7px rgba(35,168,101,0);}100%{box-shadow:0 0 0 0 rgba(35,168,101,0);}}
+  @media (max-width:560px){ .cards{grid-template-columns:1fr;} }
+  @media (prefers-reduced-motion:reduce){ .cfl-dot{animation:none;} .card{transition:none;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="cfl-brand">
+    <span class="cfl-mark"><span class="cfl-ci">CI/CD</span><span class="cfl-life">for Life</span></span>
+    <span class="cfl-badge"><span class="cfl-dot"></span>early preview</span>
+  </span>
+
+  <div class="kicker">Continuous Improvement / Continuous Deployment</div>
+  <h1>Strength training<br>for people who ship.</h1>
+  <p class="lede">You built pipelines so a thousand small, tested changes reach production safely. This project is an appeal to deploy that same discipline to <b>the one system you can never re-provision</b> — your body. Same principles: small commits, observability, progressive overload, scheduled rollbacks.</p>
+
+  <div class="cards">
+    <a class="card" href="./manifesto/">
+      <div class="tag">// the argument</div>
+      <h2>The Manifesto</h2>
+      <p>Why to move past longevity fads and invest where the evidence already shipped — mortality, bone density, the works. Fully cited.</p>
+      <span class="go">read it →</span>
+    </a>
+    <a class="card" href="./diagram/">
+      <div class="tag">// the metaphor</div>
+      <h2>The Pipeline</h2>
+      <p>The CI/CD pipeline mapped onto a training and competition cycle, rendered as a loaded barbell.</p>
+      <span class="go">view diagram →</span>
+    </a>
+    <a class="card" href="./brand/">
+      <div class="tag">// the kit</div>
+      <h2>Brand assets</h2>
+      <p>Wordmark (SVG + reusable HTML), die-cut sticker PNGs, and favicons. Take a look, slap one on a laptop.</p>
+      <span class="go">browse assets →</span>
+    </a>
+  </div>
+
+  <div class="feedback">
+    <h3>This is an early draft — tell me where it's wrong.</h3>
+    <p>I'm sharing this with a few friends for feedback before it goes wider. Open an issue on the repo, or email <a href="mailto:cicdforlife@gmail.com">cicdforlife@gmail.com</a>. What lands? What's a stretch? What would make you actually pick up a barbell?</p>
+  </div>
+
+  <footer>
+    <span>CI/CD for Life · v0.1 preview</span>
+    <span><a href="mailto:cicdforlife@gmail.com">cicdforlife@gmail.com</a></span>
+  </footer>
+
+</div>
+</body>
+</html>

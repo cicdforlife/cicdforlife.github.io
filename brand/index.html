@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CI/CD for Life — Brand</title>
+<link rel="icon" href="./favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#14161B;--surface:#1B1E25;--surface-2:#222632;--rim:#2E3340;--rim-bright:#3C4252;
+    --hi:#EDEFF2;--mid:#C2C8D2;--lo:#8A93A2;--green:#23A865;--green-soft:#4fc98c;--ink:#0E0F12;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:radial-gradient(1200px 700px at 50% -15%, #1B2029 0%, var(--bg) 55%);
+    color:var(--hi);font-family:"Hanken Grotesk",system-ui,sans-serif;line-height:1.6;
+    -webkit-font-smoothing:antialiased;padding:clamp(24px,5vw,60px) clamp(18px,5vw,40px) 72px;}
+  .wrap{max-width:820px;margin:0 auto;}
+  a{color:var(--green-soft);}
+  .home{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--lo);text-decoration:none;}
+  h1{font-family:"Archivo",sans-serif;font-weight:900;text-transform:uppercase;
+    font-size:clamp(30px,5vw,46px);letter-spacing:-.02em;margin:18px 0 8px;}
+  .lede{color:var(--mid);max-width:60ch;margin:0 0 36px;}
+  h2{font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--lo);margin:40px 0 14px;display:flex;align-items:center;gap:12px;}
+  h2::after{content:"";height:1px;flex:1;background:var(--rim);}
+  .panel{background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--rim);
+    border-radius:14px;padding:26px;display:flex;align-items:center;justify-content:center;}
+  .panel.light{background:#fff;}
+  .panel img{max-width:100%;height:auto;}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+  .favs{display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap;}
+  .fav{text-align:center;}
+  .fav img{border-radius:12px;display:block;margin:0 auto 8px;}
+  .meta{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--lo);margin-top:10px;}
+  .meta a{margin-right:14px;}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin-top:6px;}
+  td{border-top:1px solid var(--rim);padding:9px 8px;color:var(--mid);vertical-align:top;}
+  td:first-child{font-family:"IBM Plex Mono",monospace;color:var(--green-soft);white-space:nowrap;width:1%;}
+  .swatch{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:middle;margin-right:7px;border:1px solid rgba(255,255,255,.15);}
+  @media (max-width:560px){.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home" href="../">↩ cicd/for/life</a>
+  <h1>Brand assets</h1>
+  <p class="lede">The wordmark and sticker kit for CI/CD for Life. Full usage notes are in <a href="./README.md">brand/README.md</a>.</p>
+
+  <h2>Wordmark</h2>
+  <div class="panel light"><img src="./wordmark.svg" alt="CI/CD for Life wordmark" style="max-width:460px"></div>
+  <div class="meta"><a href="./wordmark.svg">wordmark.svg</a> (outlined, font-free) · <a href="./wordmark.html">wordmark.html</a> (reusable partial)</div>
+
+  <h2>Stickers</h2>
+  <div class="grid">
+    <div class="panel"><img src="./cicd-for-life-sticker-dark.png" alt="Dark die-cut sticker"></div>
+    <div class="panel light"><img src="./cicd-for-life-light.png" alt="Light surface version"></div>
+  </div>
+  <div class="meta"><a href="./cicd-for-life-sticker-dark.png">sticker-dark.png</a> (die-cut, ~300dpi) · <a href="./cicd-for-life-light.png">light.png</a> (for white surfaces)</div>
+
+  <h2>Favicons</h2>
+  <div class="favs">
+    <div class="fav"><img src="./favicon-32.png" width="32" alt=""><div class="meta">32</div></div>
+    <div class="fav"><img src="./favicon-180.png" width="64" alt=""><div class="meta">180</div></div>
+    <div class="fav"><img src="./favicon-512.png" width="96" alt=""><div class="meta">512</div></div>
+  </div>
+
+  <h2>Colors &amp; type</h2>
+  <table>
+    <tr><td><span class="swatch" style="background:#23A865"></span>#23A865</td><td>Pipeline green — the brand accent (a passing build)</td></tr>
+    <tr><td><span class="swatch" style="background:#14161B"></span>#14161B</td><td>Iron — background / dark surface</td></tr>
+    <tr><td>Archivo Black</td><td>Display voice — the athletic headline</td></tr>
+    <tr><td>IBM Plex Mono</td><td>Engineering voice — labels, the CI/CD mark</td></tr>
+    <tr><td>Hanken Grotesk</td><td>Body voice — running text</td></tr>
+  </table>
+</div>
+</body>
+</html>

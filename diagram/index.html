@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CI/CD, racked — the training pipeline</title>
+<link rel="icon" href="../brand/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* iron + steel ground */
+    --bg:#14161B;
+    --surface:#1B1E25;
+    --surface-2:#222632;
+    --rim:#2E3340;
+    --rim-bright:#3C4252;
+    --steel:#C7CDD6;
+    --steel-dim:#8A93A2;
+    --hi:#EDEFF2;
+    --lo:#8A93A2;
+    /* IPF calibrated plate colors — double as CI status */
+    --p-white:#E8EAED;   /* 5kg  · light, frequent */
+    --p-blue:#2E6BD6;    /* 20kg · steady / monitoring */
+    --p-red:#D7282F;     /* 25kg · heavy / failing / emergency */
+    --p-yellow:#F2C200;  /* 15kg · validate / caution */
+    --p-green:#23A865;   /* 10kg · go live / passing */
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #1B2029 0%, var(--bg) 55%);
+    color:var(--hi);
+    font-family:"Hanken Grotesk",system-ui,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding:clamp(20px,4vw,56px) clamp(16px,4vw,56px) 64px;
+  }
+  .wrap{max-width:1120px;margin:0 auto;}
+
+  /* ---------- header ---------- */
+  .brand{
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  .mark{display:inline-flex;align-items:baseline;gap:9px;}
+  .mark .m1{
+    font-family:"IBM Plex Mono",monospace;font-weight:600;
+    font-size:19px;letter-spacing:.02em;
+    color:#0E0F12;background:var(--p-green);
+    padding:3px 9px;border-radius:6px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  .mark .m2{
+    font-family:"Archivo",sans-serif;font-weight:900;
+    font-size:21px;letter-spacing:-.01em;color:var(--hi);
+  }
+  .badge{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;
+    color:var(--p-green);
+    display:inline-flex;align-items:center;gap:8px;
+    padding:5px 11px;border-radius:999px;
+    border:1px solid rgba(35,168,101,.4);background:rgba(35,168,101,.06);
+  }
+  .badge .dot{
+    width:8px;height:8px;border-radius:50%;background:var(--p-green);
+    animation:pulse 2.4s ease-out infinite;
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12.5px;letter-spacing:.06em;
+    color:var(--steel-dim);
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+  .eyebrow .run{
+    color:var(--p-green);
+    display:inline-flex;align-items:center;gap:7px;
+  }
+  .eyebrow .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--p-green);
+    box-shadow:0 0 0 0 rgba(35,168,101,.6);
+    animation:pulse 2.4s ease-out infinite;
+  }
+  h1{
+    font-family:"Archivo",sans-serif;font-weight:900;
+    font-size:clamp(38px,7vw,76px);
+    line-height:.95;letter-spacing:-.02em;
+    margin:0 0 18px;
+    text-transform:uppercase;
+  }
+  h1 .slash{color:var(--steel-dim);font-weight:600;}
+  .lede{
+    font-size:clamp(16px,2.2vw,19px);
+    color:var(--lo);max-width:60ch;margin:0;
+  }
+  .lede b{color:var(--hi);font-weight:600;}
+
+  .legend{
+    margin-top:26px;display:flex;gap:18px 26px;flex-wrap:wrap;
+    font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--steel-dim);
+    padding-top:20px;border-top:1px solid var(--rim);
+  }
+  .legend span{display:inline-flex;align-items:center;gap:8px;}
+  .chip{width:12px;height:12px;border-radius:3px;border:1px solid rgba(255,255,255,.18);}
+
+  /* ---------- section labels ---------- */
+  .seclabel{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--steel-dim);
+    margin:54px 0 22px;
+    display:flex;align-items:center;gap:14px;
+  }
+  .seclabel::after{content:"";height:1px;flex:1;background:var(--rim);}
+
+  /* ---------- the barbell pipeline ---------- */
+  .stages{
+    position:relative;
+    display:grid;grid-template-columns:repeat(6,1fr);
+    gap:14px;
+  }
+  /* the bar: a steel shaft threading every plate */
+  .stages::before{
+    content:"";position:absolute;z-index:0;
+    top:38px;left:6px;right:6px;height:7px;border-radius:4px;
+    background:linear-gradient(180deg,#E4E8EE 0%,#AEB6C2 45%,#6C7480 100%);
+    box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 6px 14px rgba(0,0,0,.45);
+  }
+  /* sleeve caps */
+  .stages::after{
+    content:"";position:absolute;z-index:0;top:33px;height:17px;width:9px;
+    left:-2px;border-radius:3px;
+    background:linear-gradient(180deg,#D7DCE3,#7E8794);
+    box-shadow:9px 0 0 -1px rgba(0,0,0,.0), 1112px 0 0 0 transparent;
+  }
+
+  .stage{
+    position:relative;z-index:1;
+    display:flex;flex-direction:column;align-items:center;
+  }
+  .plate{
+    position:relative;z-index:2;
+    width:78px;height:78px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:#0E0F12;font-family:"Archivo",sans-serif;font-weight:900;
+    font-size:18px;
+    border:3px solid rgba(0,0,0,.35);
+    box-shadow:
+      0 0 0 4px rgba(0,0,0,.30),
+      0 10px 22px rgba(0,0,0,.45),
+      inset 0 2px 6px rgba(255,255,255,.45),
+      inset 0 -8px 14px rgba(0,0,0,.30);
+    transition:transform .18s ease, filter .18s ease;
+  }
+  .plate::after{ /* center collar hole */
+    content:"";position:absolute;width:20px;height:20px;border-radius:50%;
+    background:radial-gradient(circle at 40% 35%,#3a3f49,#16181d);
+    box-shadow:inset 0 1px 2px rgba(255,255,255,.18);
+  }
+  .plate .kg{position:relative;z-index:1;transform:translateY(-15px);font-size:13px;opacity:.85;}
+  .plate .idx{position:absolute;bottom:11px;font-size:11px;font-family:"IBM Plex Mono",monospace;font-weight:600;opacity:.8;}
+
+  .p-white {background:radial-gradient(circle at 38% 30%,#fff,var(--p-white) 70%);}
+  .p-blue  {background:radial-gradient(circle at 38% 30%,#5b8ee6,var(--p-blue) 70%);color:#0a1326;}
+  .p-red   {background:radial-gradient(circle at 38% 30%,#e8595e,var(--p-red) 70%);color:#2a0608;}
+  .p-yellow{background:radial-gradient(circle at 38% 30%,#ffe066,var(--p-yellow) 70%);}
+  .p-green {background:radial-gradient(circle at 38% 30%,#4fc98c,var(--p-green) 70%);color:#04210f;}
+
+  .stage:hover .plate{transform:translateY(-4px) scale(1.04);filter:brightness(1.06);}
+
+  .card{
+    margin-top:20px;width:100%;
+    background:linear-gradient(180deg,var(--surface-2),var(--surface));
+    border:1px solid var(--rim);
+    border-radius:12px;padding:16px 15px 15px;
+    min-height:188px;
+    transition:border-color .18s ease, transform .18s ease;
+  }
+  .stage:hover .card{border-color:var(--rim-bright);transform:translateY(-2px);}
+  .card .tech{
+    font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.04em;
+    color:var(--steel-dim);margin-bottom:7px;
+  }
+  .card .tech .op{color:var(--steel);}
+  .card .lift{
+    font-family:"Archivo",sans-serif;font-weight:800;font-size:18px;
+    line-height:1.05;letter-spacing:-.01em;margin-bottom:9px;
+  }
+  .card .desc{font-size:13.5px;color:var(--lo);}
+  .status{
+    margin-top:13px;display:inline-flex;align-items:center;gap:7px;
+    font-family:"IBM Plex Mono",monospace;font-size:11px;
+    padding:4px 9px;border-radius:999px;
+    border:1px solid var(--rim-bright);color:var(--hi);
+    background:rgba(255,255,255,.02);
+  }
+  .status .led{width:7px;height:7px;border-radius:50%;}
+
+  /* ---------- cross-cutting concerns ---------- */
+  .cross{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+  }
+  .xc{
+    background:var(--surface);
+    border:1px solid var(--rim);border-left:3px solid var(--accent,var(--steel));
+    border-radius:12px;padding:16px 16px 15px;
+    transition:transform .18s ease,border-color .18s ease;
+  }
+  .xc:hover{transform:translateY(-2px);border-color:var(--rim-bright);}
+  .xc .tech{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--steel-dim);margin-bottom:8px;}
+  .xc .lift{font-family:"Archivo",sans-serif;font-weight:800;font-size:16px;margin-bottom:8px;letter-spacing:-.01em;}
+  .xc .desc{font-size:13px;color:var(--lo);}
+
+  /* ---------- thesis footer ---------- */
+  .thesis{
+    margin-top:56px;padding:26px clamp(18px,3vw,34px);
+    border:1px solid var(--rim);border-radius:14px;
+    background:linear-gradient(180deg,var(--surface-2),var(--surface));
+    display:flex;gap:18px;align-items:flex-start;
+  }
+  .thesis .bars{font-family:"IBM Plex Mono",monospace;color:var(--p-green);font-size:22px;line-height:1;margin-top:2px;}
+  .thesis p{margin:0;font-size:clamp(15px,2vw,18px);}
+  .thesis b{font-family:"Archivo",sans-serif;font-weight:800;}
+
+  /* ---------- motion: load the bar L→R ---------- */
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(35,168,101,.55);}
+    70%{box-shadow:0 0 0 7px rgba(35,168,101,0);}
+    100%{box-shadow:0 0 0 0 rgba(35,168,101,0);}
+  }
+  @keyframes load{
+    from{opacity:0;transform:translateY(10px) scale(.9);}
+    to{opacity:1;transform:translateY(0) scale(1);}
+  }
+  .stage{animation:load .5s cubic-bezier(.2,.7,.2,1) backwards;}
+  .stage:nth-child(1){animation-delay:.05s;}
+  .stage:nth-child(2){animation-delay:.16s;}
+  .stage:nth-child(3){animation-delay:.27s;}
+  .stage:nth-child(4){animation-delay:.38s;}
+  .stage:nth-child(5){animation-delay:.49s;}
+  .stage:nth-child(6){animation-delay:.60s;}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:880px){
+    .stages{grid-template-columns:1fr;gap:0;}
+    .stages::before{ /* bar becomes vertical rail through the plates */
+      top:0;bottom:0;left:39px;right:auto;width:7px;height:auto;
+      background:linear-gradient(90deg,#E4E8EE,#AEB6C2 45%,#6C7480);
+    }
+    .stages::after{display:none;}
+    .stage{
+      flex-direction:row;align-items:flex-start;gap:16px;
+      padding:14px 0;
+    }
+    .plate{width:78px;height:78px;flex:0 0 78px;}
+    .card{margin-top:0;min-height:0;}
+    .cross{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:520px){
+    .cross{grid-template-columns:1fr;}
+    .legend{gap:10px 18px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .stage{animation:none;}
+    .badge .dot{animation:none;}
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<a href="../" style="position:fixed;top:14px;right:16px;z-index:99;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#23A865;text-decoration:none;border:1px solid rgba(35,168,101,.4);background:rgba(20,22,27,.72);padding:6px 11px;border-radius:999px;backdrop-filter:blur(6px)">cicd/for/life ↩</a>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <span class="mark"><span class="m1">CI/CD</span><span class="m2">for Life</span></span>
+      <span class="badge"><span class="dot"></span>pipeline: passing</span>
+    </div>
+    <div class="eyebrow">
+      <span>continuous improvement / continuous deployment</span>
+      <span>·</span>
+      <span>strength training for people who ship</span>
+    </div>
+    <h1>CI/CD,<br>racked.<span class="slash"></span></h1>
+    <p class="lede">The release pipeline tech already trusts, mapped onto the barbell. Both turn <b>small, frequent, observable inputs</b> into one total you can ship with confidence — and you run the loop <b>for life</b>. Plates run in IPF calibrated colors, which happen to read as build status.</p>
+
+    <div class="legend">
+      <span><i class="chip" style="background:var(--p-white)"></i>5kg · light &amp; frequent</span>
+      <span><i class="chip" style="background:var(--p-blue)"></i>20kg · steady</span>
+      <span><i class="chip" style="background:var(--p-yellow)"></i>15kg · validate</span>
+      <span><i class="chip" style="background:var(--p-red)"></i>25kg · heavy / fail</span>
+      <span><i class="chip" style="background:var(--p-green)"></i>10kg · go live</span>
+    </div>
+  </header>
+
+  <!-- ====== sequential pipeline ====== -->
+  <div class="seclabel">The pipeline · runs in order</div>
+  <div class="stages">
+
+    <div class="stage">
+      <div class="plate p-white"><span class="kg">5kg</span><span class="idx">01</span></div>
+      <div class="card">
+        <div class="tech"><span class="op">git</span> commit</div>
+        <div class="lift">Training log</div>
+        <div class="desc">Every session is a commit. Small and frequent beats one heroic merge — log it or it never happened.</div>
+        <span class="status"><span class="led" style="background:var(--p-white)"></span>logged</span>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="plate p-blue"><span class="kg">20kg</span><span class="idx">02</span></div>
+      <div class="card">
+        <div class="tech">ci <span class="op">·</span> integrate</div>
+        <div class="lift">Accumulation</div>
+        <div class="desc">Train often enough that no single day is high-stakes. Each session merges cleanly into the main branch.</div>
+        <span class="status"><span class="led" style="background:var(--p-blue)"></span>merged clean</span>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="plate p-red"><span class="kg">25kg</span><span class="idx">03</span></div>
+      <div class="card">
+        <div class="tech">build <span class="op">·</span> compile</div>
+        <div class="lift">Hypertrophy block</div>
+        <div class="desc">Compile the raw material — muscle, work capacity, tendon resilience. Nothing ships yet; you're making the artifact.</div>
+        <span class="status"><span class="led" style="background:var(--p-red)"></span>compiling</span>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="plate p-yellow"><span class="kg">15kg</span><span class="idx">04</span></div>
+      <div class="card">
+        <div class="tech">test <span class="op">·</span> validate</div>
+        <div class="lift">Overload work</div>
+        <div class="desc">Top sets &amp; AMRAPs are unit tests. Heavy singles are integration tests. A grindy rep is a red test: not ready to ship.</div>
+        <span class="status"><span class="led" style="background:var(--p-yellow)"></span>1 red · 8 green</span>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="plate p-blue"><span class="kg">20kg</span><span class="idx">05</span></div>
+      <div class="card">
+        <div class="tech">staging <span class="op">·</span> peak</div>
+        <div class="lift">Taper &amp; mock meet</div>
+        <div class="desc">Staging mirrors prod without being it. Commands, timing, openers — same conditions, safe to fail.</div>
+        <span class="status"><span class="led" style="background:var(--p-blue)"></span>mirrors prod</span>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="plate p-green"><span class="kg">10kg</span><span class="idx">06</span></div>
+      <div class="card">
+        <div class="tech">deploy <span class="op">·</span> release</div>
+        <div class="lift">Meet day</div>
+        <div class="desc">The total goes live. Ship incrementally — nine attempts, opener to third — never one big-bang max you never tested.</div>
+        <span class="status"><span class="led" style="background:var(--p-green)"></span>live</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ====== cross-cutting concerns ====== -->
+  <div class="seclabel">Always on · cross-cutting</div>
+  <div class="cross">
+    <div class="xc" style="--accent:var(--p-blue)">
+      <div class="tech">observability</div>
+      <div class="lift">Recovery telemetry</div>
+      <div class="desc">Sleep, bodyweight, bar speed, RPE, resting HR. Your dashboard — you don't program blind into a meet.</div>
+    </div>
+    <div class="xc" style="--accent:var(--p-yellow)">
+      <div class="tech">rollback</div>
+      <div class="lift">Deload &amp; autoregulation</div>
+      <div class="desc">Bar speed drops, RPE creeps at the same load — roll back to a known-good state instead of forcing the release.</div>
+    </div>
+    <div class="xc" style="--accent:var(--p-white)">
+      <div class="tech">lint <span style="color:var(--steel)">·</span> static analysis</div>
+      <div class="lift">Technique review</div>
+      <div class="desc">Cheap checks before you load the bar. Video and cueing catch the form error before it's a runtime failure at 90%.</div>
+    </div>
+    <div class="xc" style="--accent:var(--p-red)">
+      <div class="tech">hotfix</div>
+      <div class="lift">Attempt selection</div>
+      <div class="desc">Missed the second? Patch the third live off real data — not the plan you wrote three weeks ago.</div>
+    </div>
+  </div>
+
+  <!-- ====== thesis ====== -->
+  <div class="thesis">
+    <div class="bars">||</div>
+    <p><b>The whole point, in one line:</b> CI/CD lowers the risk of any single release by making releases frequent, small, and observable. That is also good programming. The lifters who blow up are the ones who skip staging and big-bang deploy a max they never tested. <b>CI/CD for Life</b> — run the loop, keep shipping.</p>
+  </div>
+
+</div>
+</body>
+</html>

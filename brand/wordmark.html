@@ -1,0 +1,66 @@
+<!--
+  CI/CD for Life — wordmark header partial
+  ----------------------------------------
+  Drop-in brand lockup. Self-contained: paste anywhere.
+  - Web fonts loaded from Google Fonts (link below).
+  - For a font-free / print / design-tool asset, use wordmark.svg instead.
+  - Scoped under .cfl- classes so it won't collide with page styles.
+  - Set data-theme="light" on .cfl-brand to render "for Life" dark (for light backgrounds).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@900&family=IBM+Plex+Mono:wght@600&display=swap" rel="stylesheet">
+
+<style>
+  .cfl-brand{
+    --cfl-green:#23A865;
+    --cfl-ink:#0E0F12;
+    --cfl-life:#EDEFF2;            /* default: on dark */
+    display:inline-flex;align-items:center;gap:16px;flex-wrap:wrap;
+    font-synthesis:none;
+  }
+  .cfl-brand[data-theme="light"]{ --cfl-life:#14161B; }  /* on light */
+
+  .cfl-mark{display:inline-flex;align-items:baseline;gap:10px;}
+  .cfl-mark .cfl-ci{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:600;
+    font-size:1.15em;letter-spacing:.02em;line-height:1;
+    color:var(--cfl-ink);background:var(--cfl-green);
+    padding:.16em .42em;border-radius:.32em;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  .cfl-mark .cfl-life{
+    font-family:"Archivo",system-ui,sans-serif;font-weight:900;
+    font-size:1.3em;letter-spacing:-.01em;line-height:1;
+    color:var(--cfl-life);
+  }
+
+  /* optional live build badge */
+  .cfl-badge{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.7em;
+    color:var(--cfl-green);
+    display:inline-flex;align-items:center;gap:.55em;
+    padding:.35em .8em;border-radius:999px;
+    border:1px solid color-mix(in srgb,var(--cfl-green) 40%,transparent);
+    background:color-mix(in srgb,var(--cfl-green) 6%,transparent);
+  }
+  .cfl-badge .cfl-dot{
+    width:.55em;height:.55em;border-radius:50%;background:var(--cfl-green);
+    animation:cfl-pulse 2.4s ease-out infinite;
+  }
+  @keyframes cfl-pulse{
+    0%{box-shadow:0 0 0 0 rgba(35,168,101,.55);}
+    70%{box-shadow:0 0 0 .5em rgba(35,168,101,0);}
+    100%{box-shadow:0 0 0 0 rgba(35,168,101,0);}
+  }
+  @media (prefers-reduced-motion:reduce){ .cfl-badge .cfl-dot{animation:none;} }
+</style>
+
+<!-- markup: scale the whole lockup by setting font-size on .cfl-brand -->
+<span class="cfl-brand" style="font-size:22px">
+  <span class="cfl-mark">
+    <span class="cfl-ci">CI/CD</span>
+    <span class="cfl-life">for Life</span>
+  </span>
+  <span class="cfl-badge"><span class="cfl-dot"></span>pipeline: passing</span>
+</span>
