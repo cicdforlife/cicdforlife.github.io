@@ -1,8 +1,8 @@
 <!--
-  CI/CD for Life — wordmark header partial
-  ----------------------------------------
+  CI/CD for Life — wordmark header partial (CRT phosphor)
+  --------------------------------------------------------
   Drop-in brand lockup. Self-contained: paste anywhere.
-  - Web fonts loaded from Google Fonts (link below).
+  - "CI/CD" is phosphor green (#00FF41) on a near-black "screen", with a CSS bloom.
   - For a font-free / print / design-tool asset, use wordmark.svg instead.
   - Scoped under .cfl- classes so it won't collide with page styles.
   - Set data-theme="light" on .cfl-brand to render "for Life" dark (for light backgrounds).
@@ -13,9 +13,10 @@
 
 <style>
   .cfl-brand{
-    --cfl-green:#23A865;
-    --cfl-ink:#0E0F12;
-    --cfl-life:#EDEFF2;            /* default: on dark */
+    --cfl-phosphor:#00FF41;
+    --cfl-screen:#080A08;
+    --cfl-rim:#00731E;
+    --cfl-life:#F0F2F5;            /* default: on dark */
     display:inline-flex;align-items:center;gap:16px;flex-wrap:wrap;
     font-synthesis:none;
   }
@@ -25,9 +26,15 @@
   .cfl-mark .cfl-ci{
     font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:600;
     font-size:1.15em;letter-spacing:.02em;line-height:1;
-    color:var(--cfl-ink);background:var(--cfl-green);
+    color:var(--cfl-phosphor);
+    background:var(--cfl-screen);
+    border:1px solid var(--cfl-rim);
     padding:.16em .42em;border-radius:.32em;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.4);
+    /* CRT bloom */
+    text-shadow:
+      0 0 .10em var(--cfl-phosphor),
+      0 0 .28em rgba(0,255,65,.75),
+      0 0 .65em rgba(0,255,65,.45);
   }
   .cfl-mark .cfl-life{
     font-family:"Archivo",system-ui,sans-serif;font-weight:900;
@@ -38,20 +45,21 @@
   /* optional live build badge */
   .cfl-badge{
     font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.7em;
-    color:var(--cfl-green);
+    color:var(--cfl-phosphor);
     display:inline-flex;align-items:center;gap:.55em;
     padding:.35em .8em;border-radius:999px;
-    border:1px solid color-mix(in srgb,var(--cfl-green) 40%,transparent);
-    background:color-mix(in srgb,var(--cfl-green) 6%,transparent);
+    border:1px solid rgba(0,255,65,.35);
+    background:rgba(0,255,65,.06);
   }
   .cfl-badge .cfl-dot{
-    width:.55em;height:.55em;border-radius:50%;background:var(--cfl-green);
+    width:.55em;height:.55em;border-radius:50%;background:var(--cfl-phosphor);
+    box-shadow:0 0 .4em var(--cfl-phosphor);
     animation:cfl-pulse 2.4s ease-out infinite;
   }
   @keyframes cfl-pulse{
-    0%{box-shadow:0 0 0 0 rgba(35,168,101,.55);}
-    70%{box-shadow:0 0 0 .5em rgba(35,168,101,0);}
-    100%{box-shadow:0 0 0 0 rgba(35,168,101,0);}
+    0%{box-shadow:0 0 .4em var(--cfl-phosphor), 0 0 0 0 rgba(0,255,65,.5);}
+    70%{box-shadow:0 0 .4em var(--cfl-phosphor), 0 0 0 .5em rgba(0,255,65,0);}
+    100%{box-shadow:0 0 .4em var(--cfl-phosphor), 0 0 0 0 rgba(0,255,65,0);}
   }
   @media (prefers-reduced-motion:reduce){ .cfl-badge .cfl-dot{animation:none;} }
 </style>

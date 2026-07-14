@@ -34,6 +34,7 @@
   .fav img{border-radius:12px;display:block;margin:0 auto 8px;}
   .meta{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--lo);margin-top:10px;}
   .meta a{margin-right:14px;}
+    .meta code{font-family:"IBM Plex Mono",monospace;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;color:var(--mid);}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin-top:6px;}
   td{border-top:1px solid var(--rim);padding:9px 8px;color:var(--mid);vertical-align:top;}
   td:first-child{font-family:"IBM Plex Mono",monospace;color:var(--green-soft);white-space:nowrap;width:1%;}
@@ -45,18 +46,39 @@
 <div class="wrap">
   <a class="home" href="../">↩ cicd/for/life</a>
   <h1>Brand assets</h1>
-  <p class="lede">The wordmark and sticker kit for CI/CD for Life. Full usage notes are in <a href="./README.md">brand/README.md</a>.</p>
+  <p class="lede">The wordmark and sticker kit for CI/CD for Life. The identity is CRT phosphor; printed stickers use a darker green that survives a laser printer. Full usage notes are in <a href="./README.md">brand/README.md</a>.</p>
 
-  <h2>Wordmark</h2>
-  <div class="panel light"><img src="./wordmark.svg" alt="CI/CD for Life wordmark" style="max-width:460px"></div>
+  <h2>Wordmark — horizontal <span style='color:#00FF41;font-size:11px'>phosphor</span></h2>
+  <div class="panel"><img src="./wordmark.svg" alt="CI/CD for Life wordmark" style="max-width:460px"></div>
   <div class="meta"><a href="./wordmark.svg">wordmark.svg</a> (outlined, font-free) · <a href="./wordmark.html">wordmark.html</a> (reusable partial)</div>
 
-  <h2>Stickers</h2>
+  <h2>Wordmark — stacked <span style='color:#00FF41;font-size:11px'>phosphor</span></h2>
+  <div class="panel"><img src="./wordmark-stacked.svg" alt="CI/CD for Life stacked wordmark" style="max-width:290px"></div>
+  <div class="meta"><a href="./wordmark-stacked.svg">wordmark-stacked.svg</a> — squarer lockup for tight spaces, square/round stickers, pins, avatars.</div>
+
+  <h2>Stickers — horizontal</h2>
   <div class="grid">
     <div class="panel"><img src="./cicd-for-life-sticker-dark.png" alt="Dark die-cut sticker"></div>
     <div class="panel light"><img src="./cicd-for-life-light.png" alt="Light surface version"></div>
   </div>
   <div class="meta"><a href="./cicd-for-life-sticker-dark.png">sticker-dark.png</a> (die-cut, ~300dpi) · <a href="./cicd-for-life-light.png">light.png</a> (for white surfaces)</div>
+
+  <h2>Stickers — stacked</h2>
+  <div class="grid">
+    <div class="panel"><img src="./cicd-for-life-stacked-dark.png" alt="Dark stacked die-cut sticker"></div>
+    <div class="panel light"><img src="./cicd-for-life-stacked-light.png" alt="Light stacked version"></div>
+  </div>
+  <div class="meta"><a href="./cicd-for-life-stacked-dark.png">stacked-dark.png</a> (die-cut, ~300dpi) · <a href="./cicd-for-life-stacked-light.png">stacked-light.png</a> (for white surfaces)</div>
+
+  <h2>Stickers — print-only <span style='color:#0B6E3F;font-size:11px'>CRT green</span></h2>
+  <div class="grid">
+    <div class="panel"><img src="./sticker-print-horizontal.png" alt="Print-optimized horizontal sticker"></div>
+    <div class="panel"><img src="./sticker-print-stacked.png" alt="Print-optimized stacked sticker"></div>
+  </div>
+  <div class="meta">
+    <a href="./sticker-print-horizontal.png">sticker-print-horizontal.png</a> · <a href="./sticker-print-stacked.png">sticker-print-stacked.png</a><br>
+    For physical stickers only — <b>not the digital brand</b>. Badge is CRT green <code>#0B6E3F</code> with white <code>CI/CD</code> (a knockout — bare paper, no toner, so it prints crisper). Flat + dithered, no bloom: the glow is a gradient, and gradients band on laser printers. 300 DPI, no alpha.
+  </div>
 
   <h2>Favicons</h2>
   <div class="favs">
@@ -67,11 +89,13 @@
 
   <h2>Colors &amp; type</h2>
   <table>
-    <tr><td><span class="swatch" style="background:#23A865"></span>#23A865</td><td>Pipeline green — the brand accent (a passing build)</td></tr>
+    <tr><td><span class="swatch" style="background:#00FF41"></span>#00FF41</td><td><b>Phosphor</b> — brand CI/CD glyphs + bloom (CRT terminal)</td></tr>
+    <tr><td><span class="swatch" style="background:#080A08"></span>#080A08</td><td>Screen — the badge field</td></tr>
+    <tr><td><span class="swatch" style="background:#0B6E3F"></span>#0B6E3F</td><td><b>CRT green</b> — print stickers only (6.33:1 with white)</td></tr>
+    <tr><td><span class="swatch" style="background:#23A865"></span>#23A865</td><td>Pipeline green — functional UI accent (links, labels)</td></tr>
     <tr><td><span class="swatch" style="background:#14161B"></span>#14161B</td><td>Iron — background / dark surface</td></tr>
+    <tr><td>IBM Plex Mono</td><td>Engineering/terminal voice — the CI/CD mark</td></tr>
     <tr><td>Archivo Black</td><td>Display voice — the athletic headline</td></tr>
-    <tr><td>IBM Plex Mono</td><td>Engineering voice — labels, the CI/CD mark</td></tr>
-    <tr><td>Hanken Grotesk</td><td>Body voice — running text</td></tr>
   </table>
 </div>
 </body>
